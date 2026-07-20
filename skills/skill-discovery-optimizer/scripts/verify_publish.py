@@ -26,7 +26,10 @@ def listing_url(source: str, skill: str) -> str | None:
     parts = source.removeprefix("https://github.com/").removesuffix(".git").strip("/").split("/")
     if len(parts) != 2:
         return None
-    return f"https://skills.sh/{parts[0]}/{parts[1]}/{skill}"
+    # Use the canonical host directly because macOS system Python does not
+    # consistently follow skills.sh's HTTP 308 redirect. / 直接使用规范域名，
+    # 避免 macOS 系统 Python 未跟随 skills.sh 的 HTTP 308 重定向。
+    return f"https://www.skills.sh/{parts[0]}/{parts[1]}/{skill}"
 
 
 def url_exists(url: str) -> bool:

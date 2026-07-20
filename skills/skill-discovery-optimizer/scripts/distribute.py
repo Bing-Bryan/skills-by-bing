@@ -28,6 +28,7 @@ def main() -> int:
     parser.add_argument("--skill", required=True, help="Skill name / Skill 名称")
     parser.add_argument("--description", required=True, help="Bilingual GitHub description / 中英双语 GitHub 简介")
     parser.add_argument("--topics", nargs="+", default=["agent-skills", "skill-discovery", "codex", "ai-agents"], help="GitHub topics")
+    parser.add_argument("--remove-topics", nargs="*", default=[], help="Stale GitHub topics to remove / 需要删除的旧 Topics")
     parser.add_argument("--apply", action="store_true", help="Apply GitHub metadata and first-install verification / 应用 GitHub 元数据并执行首次安装验证")
     args = parser.parse_args()
 
@@ -35,7 +36,7 @@ def main() -> int:
     plan = {
         "repo": args.repo,
         "skill": args.skill,
-        "automatic": ["Set GitHub description/topics", "Run isolated npx skills add", "Verify skills.sh listing"],
+        "automatic": ["Set GitHub description/topics", "Remove explicitly listed stale topics", "Run isolated npx skills add", "Verify skills.sh listing"],
         "approval_gated": [item for item in config["destinations"] if item.get("approval_required")],
     }
     if not args.apply:
@@ -57,6 +58,11 @@ def main() -> int:
     if edit.returncode != 0:
         print(edit.stderr, file=sys.stderr)
         return 1
+    for topic in args.remove_topics:
+        result = run(["gh", "repo", "edit", args.repo, "--remove-topic", topic])
+        if result.returncode != 0:
+            print(result.stderr, file=sys.stderr)
+            return 1
     for topic in args.topics:
         result = run(["gh", "repo", "edit", args.repo, "--add-topic", topic])
         if result.returncode != 0:
