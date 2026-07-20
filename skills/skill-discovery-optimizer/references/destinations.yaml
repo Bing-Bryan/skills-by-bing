@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "last_verified": "2026-07-21",
+  "notes_en": "Refresh contribution rules before any external submission.",
+  "notes_zh": "执行任何外部投稿前，必须重新核实贡献规则。",
+  "destinations": [
+    {
+      "id": "github",
+      "kind": "source",
+      "required": true,
+      "mode": "authenticated-push",
+      "approval_required": true,
+      "url": "https://github.com/",
+      "notes_en": "Confirm the authenticated owner, exact repository, visibility, changed paths, and rename behavior before writing.",
+      "notes_zh": "写入前确认认证账号、准确仓库、可见性、变更路径和重命名方式。"
+    },
+    {
+      "id": "skills-sh",
+      "kind": "registry",
+      "required": true,
+      "mode": "automatic-after-install",
+      "approval_required": false,
+      "url": "https://skills.sh/",
+      "notes_en": "A real telemetry-enabled npx skills add triggers automatic listing.",
+      "notes_zh": "真实且启用遥测的 npx skills add 会触发自动收录。"
+    },
+    {
+      "id": "composio-awesome-claude-skills",
+      "kind": "curated-directory",
+      "required": false,
+      "mode": "pull-request-copy",
+      "approval_required": true,
+      "repository": "ComposioHQ/awesome-claude-skills",
+      "contributing": "https://github.com/ComposioHQ/awesome-claude-skills/blob/master/CONTRIBUTING.md",
+      "notes_en": "Requires a tested skill folder and a repository-specific README entry.",
+      "notes_zh": "需要提交经过测试的 Skill 目录，并按仓库规则更新 README。"
+    },
+    {
+      "id": "heilcheng-awesome-agent-skills",
+      "kind": "curated-directory",
+      "required": false,
+      "mode": "pull-request-index",
+      "approval_required": true,
+      "repository": "heilcheng/awesome-agent-skills",
+      "contributing": "https://github.com/heilcheng/awesome-agent-skills/blob/main/CONTRIBUTING.md",
+      "notes_en": "Requires a metadata entry and repository-specific checks.",
+      "notes_zh": "需要添加元数据条目，并执行该仓库要求的检查。"
+    }
+  ]
+}

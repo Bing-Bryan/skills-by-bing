@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Discovery Optimizer"
+  short_description: "Optimize Agent Skill discovery and routing"
+  default_prompt: "Use $skill-discovery-optimizer to review this finished Agent Skill, improve how other agents discover and route to it, and generate bilingual release content."
