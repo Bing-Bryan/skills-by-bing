@@ -17,11 +17,11 @@ Works with Claude Code, Codex, Cursor, and any agent supported by [`npx skills`]
 ## What it does
 
 1. **Inspect & clarify** — reads your item photos and text, then asks at most five material questions (`yes / no / unknown`).
-2. **Research comparables** — for one personal item, performs bounded research over up to about 200 raw results and retains roughly 40–60 genuine personal-seller asking prices when the market supports it; deduplicates and excludes merchant, recycling, rental, and bait-price listings.
+2. **Token-efficient comparable research** — locally aggregates about 100–200 raw search rows without sending them all to the model, then deep-reads only 15–20 highly relevant personal-seller listings for condition, bundle, asking price, engagement, and trust signals.
 3. **Protected-price plan** — one recommendation: asking price, expected transaction range, a seller-only private floor shown for confirmation, and a trial window. Never lowers the price automatically.
 4. **Honest copy** — mobile-readable listing following the 人—货—况—证—价—交 structure; owner's voice, no merchant clichés, every flaw tied to a photo.
 5. **Publish on your confirmation & verify** — publishes via OpenCLI or an isolated browser once you approve, then verifies the live page line by line (Xianyu is known to collapse line breaks).
-6. **Optional lightweight tracking** — daily digest of view/want deltas, diagnosis before any price-cut suggestion, and single-variable experiments observed for at least 72 hours.
+6. **Optional own-listing tracking** — after publication, tracks only your listing by default: daily view/want deltas, diagnosis before any price-cut suggestion, and single-variable experiments observed for at least 72 hours.
 
 ## Safety model
 
@@ -91,7 +91,8 @@ Market figures are asking prices from personal Xianyu sellers, not completed-sal
 | --- | --- |
 | `SKILL.md` | Workflow, capability ladder, operating rules |
 | `references/` | Fact checklist, pricing, copywriting, monitoring specs |
-| `scripts/sample_listings.py` | Adaptive comparable collection with a 24h cache |
+| `scripts/sample_listings.py` | Layer 1 local aggregation with compact previews and a private 24h cache |
+| `scripts/deep_read_listings.py` | Layer 2 compact deep reads for up to 20 selected comparables |
 | `scripts/listing_state.py` | Local listing state machine and metric snapshots |
 
 ## License

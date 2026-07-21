@@ -11,6 +11,8 @@ Default monitoring reports only:
 - whether a diagnosis checkpoint is due;
 - one conclusion: `continue observing` or one recommended action.
 
+Monitor user-owned listings only. Do not continue polling the pre-publish comparable set after the user's listing goes live.
+
 Do not monitor private chat content, platform impressions, CTR, recommendation sources, or global search rank. Search-position and experiment details are opt-in diagnostics, not daily-report defaults.
 
 ## Schedule

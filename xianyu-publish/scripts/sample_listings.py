@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Adaptively collect and triage Xianyu comparables through OpenCLI.
+"""Collect Xianyu comparables locally and emit a token-efficient summary.
 
-The output is evidence for a model or subagent, not a final personal-seller
-classification. Use --fixture for offline tests.
+Full search rows stay in a private cache. Standard output contains aggregate
+statistics and a bounded preview for selecting 15–20 deep-read candidates.
+Use --fixture for offline tests.
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import statistics
 import subprocess
 import sys
@@ -17,7 +19,7 @@ import time
 from pathlib import Path
 from typing import Callable, Iterable, Optional
 
-from parse_utils import parse_price
+from parse_utils import parse_amount, parse_price
 
 
 PERSONAL = (
@@ -124,6 +126,86 @@ def median_candidate_price(rows: Iterable[dict]) -> Optional[float]:
     return statistics.median(prices) if prices else None
 
 
+def percentile(values: Iterable[float], fraction: float) -> Optional[float]:
+    ordered = sorted(float(value) for value in values)
+    if not ordered:
+        return None
+    position = (len(ordered) - 1) * fraction
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    weight = position - lower
+    return ordered[lower] * (1 - weight) + ordered[upper] * weight
+
+
+def numeric_summary(values: Iterable[Optional[float]]) -> dict:
+    numbers = [float(value) for value in values if value is not None]
+    return {
+        "count": len(numbers),
+        "min": min(numbers) if numbers else None,
+        "p25": percentile(numbers, 0.25),
+        "median": statistics.median(numbers) if numbers else None,
+        "p75": percentile(numbers, 0.75),
+        "max": max(numbers) if numbers else None,
+    }
+
+
+def query_terms(queries: Iterable[str]) -> tuple[str, ...]:
+    terms: list[str] = []
+    for query in queries:
+        terms.extend(re.findall(r"[A-Za-z0-9][A-Za-z0-9+._-]*|[\u3400-\u9fff]{2,}", query.lower()))
+    return tuple(dict.fromkeys(term for term in terms if len(term) >= 2))
+
+
+def relevance_score(row: dict, terms: Iterable[str]) -> float:
+    title = str(row.get("title", "")).lower()
+    score = sum(2.0 if term in title else 0.0 for term in terms)
+    if row.get("likely_personal"):
+        score += 1.0
+    if row.get("parsed_price") is not None:
+        score += 0.25
+    return score
+
+
+def candidate_previews(rows: Iterable[dict], queries: Iterable[str], limit: int = 30) -> list[dict]:
+    terms = query_terms(queries)
+    ranked = []
+    for row in rows:
+        if not row.get("candidate"):
+            continue
+        ranked.append((relevance_score(row, terms), row))
+    ranked.sort(key=lambda pair: (-pair[0], not bool(pair[1].get("likely_personal")), str(pair[1].get("item_id", ""))))
+    return [
+        {
+            "item_id": str(row.get("item_id", "")),
+            "title": str(row.get("title", "")),
+            "price": row.get("parsed_price"),
+            "want": parse_amount(row.get("want")),
+            "location": str(row.get("location", "")),
+            "badge": str(row.get("badge", "")),
+            "likely_personal": bool(row.get("likely_personal")),
+            "relevance_score": score,
+        }
+        for score, row in ranked[:limit]
+    ]
+
+
+def compact_result(result: dict, queries: Iterable[str], preview_limit: int = 30) -> dict:
+    rows = result.get("items", [])
+    candidates = [row for row in rows if row.get("candidate")]
+    compact = {key: value for key, value in result.items() if key != "items"}
+    compact.update({
+        "price_summary": numeric_summary(row.get("parsed_price") for row in candidates),
+        "want_summary": numeric_summary(parse_amount(row.get("want")) for row in candidates),
+        "candidate_previews": candidate_previews(rows, queries, preview_limit),
+        "note": (
+            "Full rows remain in the private cache. Candidate previews are title-level triage only; "
+            "select 15–20 highly relevant item IDs for deep reading. Want counts are static signals, "
+            "not proof of demand velocity or completed transactions."
+        ),
+    })
+    return compact
+
+
 def relative_change(before: Optional[float], after: Optional[float]) -> Optional[float]:
     if before is None or after is None or before == 0:
         return None
@@ -134,8 +216,9 @@ def collect(
     queries: list[str],
     searcher: Callable[[str, int, Optional[float], Optional[float]], list[dict]],
     batch_limit: int = 50,
+    min_raw: int = 100,
     max_raw: int = 200,
-    min_candidates: int = 40,
+    min_candidates: int = 30,
     stability_threshold: float = 0.03,
     min_price: Optional[float] = None,
     max_price: Optional[float] = None,
@@ -167,7 +250,7 @@ def collect(
             "median_candidate_price": current_median,
             "median_relative_change": change,
         })
-        if candidate_count >= min_candidates and change is not None and change <= stability_threshold:
+        if len(raw) >= min_raw and candidate_count >= min_candidates and change is not None and change <= stability_threshold:
             stable = True
             stopped_reason = "stable"
             break
@@ -212,15 +295,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--query", action="append", required=True, help="Repeat 4–6 times with genuine query variants")
     parser.add_argument("--batch-limit", type=int, default=50)
+    parser.add_argument("--min-raw", type=int, default=100)
     parser.add_argument("--max-raw", type=int, default=200)
-    parser.add_argument("--min-candidates", type=int, default=40)
+    parser.add_argument("--min-candidates", type=int, default=30)
     parser.add_argument("--stability-threshold", type=float, default=0.03)
+    parser.add_argument("--preview-limit", type=int, default=30)
     parser.add_argument("--min-price", type=float)
     parser.add_argument("--max-price", type=float)
     parser.add_argument("--exclude-word", action="append", default=[])
     parser.add_argument("--state-dir", type=Path, default=Path(".xianyu-publish"))
     parser.add_argument("--cache-hours", type=float, default=24.0)
     parser.add_argument("--no-cache", action="store_true")
+    parser.add_argument("--include-items", action="store_true", help="Include full rows in stdout for debugging")
     parser.add_argument("--fixture", type=Path, help="Offline JSON list or query-to-list mapping")
     args = parser.parse_args()
 
@@ -228,6 +314,10 @@ def main() -> int:
         parser.error("--batch-limit must be between 1 and 100")
     if args.max_raw < args.batch_limit:
         parser.error("--max-raw must be at least --batch-limit")
+    if not args.batch_limit <= args.min_raw <= args.max_raw:
+        parser.error("--min-raw must be between --batch-limit and --max-raw")
+    if not 15 <= args.preview_limit <= 40:
+        parser.error("--preview-limit must be between 15 and 40")
     if not 0 <= args.stability_threshold <= 1:
         parser.error("--stability-threshold must be between 0 and 1")
 
@@ -235,6 +325,7 @@ def main() -> int:
     config = {
         "queries": args.query,
         "batch_limit": args.batch_limit,
+        "min_raw": args.min_raw,
         "max_raw": args.max_raw,
         "min_candidates": args.min_candidates,
         "stability_threshold": args.stability_threshold,
@@ -242,7 +333,7 @@ def main() -> int:
         "max_price": args.max_price,
         "exclude_words": excludes,
         "fixture": str(args.fixture.resolve()) if args.fixture else None,
-        "schema": 2,
+        "schema": 3,
     }
     target = cache_path(args.state_dir, config)
     if not args.no_cache and target.exists() and time.time() - target.stat().st_mtime <= args.cache_hours * 3600:
@@ -254,6 +345,7 @@ def main() -> int:
             args.query,
             searcher,
             batch_limit=args.batch_limit,
+            min_raw=args.min_raw,
             max_raw=args.max_raw,
             min_candidates=args.min_candidates,
             stability_threshold=args.stability_threshold,
@@ -265,7 +357,12 @@ def main() -> int:
         if not args.no_cache:
             write_private_json(target, result)
 
-    json.dump(result, sys.stdout, ensure_ascii=False, indent=2)
+    output = compact_result(result, args.query, args.preview_limit)
+    output["from_cache"] = result["from_cache"]
+    output["cache_file"] = str(target) if not args.no_cache else None
+    if args.include_items:
+        output["items"] = result.get("items", [])
+    json.dump(output, sys.stdout, ensure_ascii=False, indent=2)
     sys.stdout.write("\n")
     return 0
 

@@ -11,6 +11,14 @@ Produce four values:
 
 Do not let a low comparable median force a low asking price. Adjust for condition, bundle, accessories, scarcity, seller evidence, and negotiation room. Explain premiums rather than hiding them. Never recommend or execute a price below the confirmed floor.
 
+## Pre-publish evidence weighting
+
+- Use the Layer 1 local aggregate to establish the broad asking-price distribution without loading full search rows into model context.
+- Use 15–20 Layer 2 deep reads to judge actual comparability: model/variant, condition, bundle, description quality, images, and seller trust.
+- Weight price, condition, and bundle most heavily. Use wants, views, collections, and search rank only as supporting signals because listing age and exposure are unknown.
+- Treat `sold` status as a status signal only. Neither displayed price nor a backend field named `soldPrice` proves the final transaction amount.
+- After publication, stop competitor research and monitor the user's own listing unless the user separately requests a new market check.
+
 ## Diagnose before lowering
 
 Use observable signals as proxies, not causal proof:

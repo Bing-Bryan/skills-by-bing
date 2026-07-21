@@ -45,13 +45,13 @@ Help ordinary users sell personal items with little effort. Let the model handle
 
 Before drafting new copy or making a substantive change to title, positioning, price, claims, structure, or transaction terms:
 
-1. Spawn a subagent; prohibit it from modifying the live listing.
-2. Search 4–6 genuine query variants in batches of roughly 40–60 raw results. Use `scripts/sample_listings.py` when OpenCLI is available.
-3. Deduplicate by item ID and exclude merchants, recycling, rental, accessories-only, software/service, bait-price, and unrelated-model listings.
-4. Prefer 40–60 retained personal-seller comparables. Stop when another batch no longer materially changes the price band or observed copy patterns.
-5. Treat about 200 raw results as a ceiling, not a target. If the market is sparse, report the actual sample; never invent counts.
-6. Reuse a matching cache for up to 24 hours.
-7. Report raw, unique, candidate, and manually retained counts plus 3–5 representative item IDs. Treat observed prices as asking prices, never confirmed transaction prices.
+1. Use a two-layer pre-publish funnel. Do not carry a competitor cohort into post-publish monitoring; after publication, track only the user's own listing unless they explicitly request separate market research.
+2. **Layer 1 — local aggregate:** search 4–6 genuine query variants in batches of roughly 40–60 results. Use `scripts/sample_listings.py`; collect at least about 100 raw rows when the market supports it and cap collection at 200.
+3. Let the script deduplicate and apply obvious merchant, recycling, rental, and service-title exclusions; add target-specific `--exclude-word` values for accessories-only, bait-price, and unrelated-model patterns. Keep full rows in the private cache; give the model only aggregate price/want statistics and bounded candidate previews. Never paste the full raw result set into model context by default.
+4. Stop Layer 1 after the minimum sample when another batch changes the candidate median by no more than about 3%. If the market is sparse, report the actual sample; never fill the quota with weak matches or invent counts.
+5. **Layer 2 — selective deep read:** choose 15–20 highly relevant personal-seller item IDs from the previews, then run `scripts/deep_read_listings.py`. Compare condition, bundle, description, displayed asking price, wants, views, collections, status, image count, and seller trust signals from its compact output.
+6. Treat static engagement counts as supporting evidence only: absolute wants or views are confounded by listing age and exposure. Never call a displayed price or `soldPrice` a confirmed transaction price.
+7. Reuse matching Layer 1 and Layer 2 caches for up to 24 hours. Report raw, unique, candidate, deep-read, and failed-read counts plus 3–5 representative item IDs.
 
 ## Operating rules
 
@@ -62,6 +62,7 @@ Before drafting new copy or making a substantive change to title, positioning, p
 - Require one authorization per new experiment. Monitoring and an authorized rollback may run automatically; a new variant may not.
 - Optimize photos only by selection, order, crop, straightening, and mild exposure/white-balance correction. Never hide wear or synthesize product facts.
 - Do not read buyer chat content by default. A user-reported inquiry—or optional metadata-only detection—starts a 48-hour negotiation hold; if the item remains active afterward, resume operation.
+- After publication, monitor only user-owned listings by default; do not keep polling research comparables.
 - Keep multiple items independent but combine normal daily reporting into one scheduled job.
 
 ## Safety and recovery
