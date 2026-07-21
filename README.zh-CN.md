@@ -25,6 +25,7 @@ npx skills add Bing-Bryan/skills-by-bing --skill skill-discovery-optimizer
 | Skill | 作用 |
 | --- | --- |
 | [skill-discovery-optimizer](skills/skill-discovery-optimizer/) | 审阅并优化已经做好的 Agent Skill，提高它被其他 Agent 发现、正确触发、信任和安装的概率；生成中英文发布资料，并可发布到用户明确确认的 GitHub 仓库。 |
+| [xianyu-publish](skills/xianyu-publish/) | 面向闲鱼个人卖家的本地优先工作流：看图查价、保价定价、诚实文案，经确认后发布、核对并轻量跟踪。 |
 
 ## 仓库结构
 

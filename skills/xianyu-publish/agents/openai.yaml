@@ -1,0 +1,4 @@
+interface:
+  display_name: "闲鱼发布助手"
+  short_description: "闲鱼个人卖家代办：看图查价、写文案，确认后发布、改价、下架与跟踪"
+  default_prompt: "用 $xianyu-publish 看图整理我的闲置商品，查价并写文案；经我确认后发布到闲鱼。"
