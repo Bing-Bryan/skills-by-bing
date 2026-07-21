@@ -48,9 +48,41 @@ Works with Claude Code, Codex, Cursor, and any agent supported by [`npx skills`]
 This skill is for personal selling. It does not handle buying or bidding,
 merchant bulk listings, other marketplaces, bulk scraping, or rule bypasses.
 
-## Real-world example
+## Real-world example: Fujifilm X-S10 dual-lens kit
 
-- [Fujifilm X-S10 dual-lens kit: research, preflight, and live listing](examples/fujifilm-xs10/)
+After placing the item photos in the working directory, the user started with the single prompt below. The skill then asked only a few factual follow-ups about function, repairs, documents, lens wear, bundle-only sale, and shipping before completing research, pricing, copywriting, publishing, live verification, and lightweight monitoring.
+
+```text
+$xianyu-publish
+
+目录文件夹里面是一个富士的 XS10 的机器，所有的信息基本上都在文件夹的图中呈现了，它有很多的图片，如果还需要其他的图片，可以找我要。
+
+还有其他的信息，就是我的 X-S10，它配套 15-45 的变焦镜头，以及 XC35 的定焦人像镜头，总共买下来是 9390。同时，还有两颗镜头的 UV 镜，以及 XC35 的 CPL 偏振镜，三支镜片总价值 270。
+
+除此以外，我还赠送一块原装电池以及两块绿巨能电池，价值接近 200 左右。我还附送一个绿色的相机皮套，一个手持手电筒用于拍照，以及镜头清理套组，还有一个湿度显示计，这个在我的图片上都有显示，还有一个吹灰尘的那个，那叫什么东西我还不太确定，你帮我明确一下。
+
+就是我送这么多东西，然后你帮我看一下，当然还有一个包，还有一个皮质的松紧收束包。帮我看一下这些东西总共卖多少钱比较合适？
+
+还有一个信息是，我这些东西都是在 23 年国庆节买的。这一点也要诚实地说上来，帮我整合闲鱼上这个品类大致的价格综合判断一下，卖多少钱比较合理？再编辑一段挂到闲鱼上的描述。
+
+关于图片，我再补充一点。所有微信 Image 打头的是一些多角度细节图，全家福三张图是我的所有物品。细节磨损方面，三张图展现出了物品的一些轻微磨损。
+```
+
+Result: Fujifilm X-S10 + XC15-45 + XC35 F2, bought during China's 2023 National Day holiday for ¥9,390; listed at ¥6,880 with a ¥6,300–6,600 expected transaction range, using nine photos and a seven-day trial window.
+
+Market figures are asking prices from personal Xianyu sellers, not completed-sale prices. The research image is an Agent-generated analysis view, not native Xianyu UI.
+
+### 1. Asking-price research
+
+![Asking-price research](assets/02-market-research.png)
+
+### 2. Pre-publish verification
+
+![Pre-publish verification](assets/03-publish-form-filled.png)
+
+### 3. Live result
+
+![Live result](assets/04-live-listing.png)
 
 ## Layout
 
@@ -61,7 +93,7 @@ merchant bulk listings, other marketplaces, bulk scraping, or rule bypasses.
 | `scripts/sample_listings.py` | Adaptive comparable collection with a 24h cache |
 | `scripts/listing_state.py` | Local listing state machine and metric snapshots |
 | `tests/` | Offline unit tests (`python3 -m unittest discover -s tests`) |
-| `examples/` | Sanitized real-world publishing examples |
+| `assets/` | Case-study images used by the README |
 
 ## License
 
