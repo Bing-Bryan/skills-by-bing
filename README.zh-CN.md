@@ -1,47 +1,42 @@
-# Skill Discovery Optimizer
+# Skills by Bing
 
 [English](README.md)
 
-审阅并优化已经做好的 Agent Skill，提高它被其他 Agent 发现、理解、信任、安装和触发的概率。发布只是可选的最后一步。
+Bing Bryan 维护的个人 Agent Skills 总库。每个 Skill 位于独立目录中，可以单独安装。
 
 ## 安装
 
+安装全部 Skills：
+
 ```bash
-npx skills add Bing-Bryan/skill-discovery-optimizer --skill skill-discovery-optimizer
+npx skills add Bing-Bryan/skills-by-bing
 ```
 
-支持 [`npx skills`](https://skills.sh) 所兼容的 Agent。
+只安装一个 Skill：
 
-## 能做什么
-
-- 审阅已经完成或接近完成的 Agent Skill，不改变其核心功能。
-- 优化名称、路由 description、触发边界、仓库元数据、信任信号和安装路径。
-- 生成完整的英文和简体中文发布文档。
-- 执行确定性仓库校验和新会话语义路由测试。
-- 可选发布到用户明确确认的 GitHub 仓库，验证远程隔离安装，并触发 skills.sh 收录。
-- 预览精选目录投稿；第三方 PR 仍需单独确认。
-
-## 工作模式
-
-```text
-只读审阅 → 本地优化 → 发布到确认的 GitHub 仓库 → 分发
+```bash
+npx skills add Bing-Bryan/skills-by-bing --skill skill-discovery-optimizer
 ```
 
-本 Skill 只执行用户请求的最窄模式：审阅不授权修改文件，本地优化也不授权公开发布。
+支持 [`npx skills`](https://skills.sh) 所兼容的 Agent，包括 Claude Code、Cursor、Codex、Copilot 和 Gemini CLI。
 
-## 范围
+## Skills 列表
 
 | Skill | 作用 |
 | --- | --- |
 | [skill-discovery-optimizer](skills/skill-discovery-optimizer/) | 审阅并优化已经做好的 Agent Skill，提高它被其他 Agent 发现、正确触发、信任和安装的概率；生成中英文发布资料，并可发布到用户明确确认的 GitHub 仓库。 |
 
-它不负责构建 Skill 的核心功能、安装别人的 Skill、通用网站 GEO/SEO、长期增长监控或 MCP Server 发布。
+## 仓库结构
 
-## 环境要求
+```text
+skills-by-bing/
+└── skills/
+    └── <skill-name>/
+        ├── SKILL.md
+        └── 可选资源
+```
 
-- Python 3.10+
-- Node.js 与 `npx`
-- 仅在发布时需要已认证的 GitHub CLI（`gh`）
+仓库索引和发布文档同时维护英文与简体中文版本。
 
 ## 许可证
 

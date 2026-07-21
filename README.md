@@ -1,47 +1,42 @@
-# Skill Discovery Optimizer
+# Skills by Bing
 
 [简体中文](README.zh-CN.md)
 
-Review and optimize a finished Agent Skill so other agents can discover, understand, trust, install, and trigger it. Publishing is an optional final step.
+A personal monorepo of Agent Skills maintained by Bing Bryan. Each Skill lives in its own folder and can be installed independently.
 
 ## Install
 
+Install all Skills:
+
 ```bash
-npx skills add Bing-Bryan/skill-discovery-optimizer --skill skill-discovery-optimizer
+npx skills add Bing-Bryan/skills-by-bing
 ```
 
-Works with any agent supported by [`npx skills`](https://skills.sh) — Claude Code, Cursor, Codex, Copilot, Gemini CLI, and more.
+Install one Skill:
 
-## What it does
-
-- Audits a completed or near-completed Agent Skill without changing its core behavior.
-- Improves its name, routing description, trigger boundaries, repository metadata, trust signals, and installation path.
-- Generates complete English and Simplified Chinese release documentation.
-- Runs deterministic repository checks and fresh-session semantic routing tests.
-- Optionally publishes to an explicitly confirmed GitHub repository, verifies an isolated remote install, and initiates skills.sh listing.
-- Previews curated-directory submissions; third-party pull requests remain approval-gated.
-
-## Operating modes
-
-```text
-Audit only → Optimize locally → Publish to confirmed GitHub repo → Distribute
+```bash
+npx skills add Bing-Bryan/skills-by-bing --skill skill-discovery-optimizer
 ```
 
-The skill uses the narrowest mode requested. A review request does not authorize file edits, and a local optimization request does not authorize publishing.
+Works with agents supported by [`npx skills`](https://skills.sh), including Claude Code, Cursor, Codex, Copilot, and Gemini CLI.
 
-## Scope
+## Available Skills
 
 | Skill | What it does |
 | --- | --- |
 | [skill-discovery-optimizer](skills/skill-discovery-optimizer/) | Reviews and optimizes a finished Agent Skill for agent-side discovery, routing, trust, and installation. Generates bilingual release materials and can publish to a confirmed GitHub repository. |
 
-It does not build a Skill's core functionality, install other people's Skills, perform generic website GEO/SEO, run long-term growth analytics, or publish MCP servers.
+## Repository structure
 
-## Requirements
+```text
+skills-by-bing/
+└── skills/
+    └── <skill-name>/
+        ├── SKILL.md
+        └── optional resources
+```
 
-- Python 3.10+
-- Node.js and `npx`
-- Authenticated GitHub CLI (`gh`) only when publishing
+The repository index and release documentation are maintained in English and Simplified Chinese.
 
 ## License
 
