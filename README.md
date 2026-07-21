@@ -24,7 +24,7 @@ Works with agents supported by [`npx skills`](https://skills.sh), including Clau
 
 | Skill | What it does |
 | --- | --- |
-| [skill-discovery-optimizer](skill-discovery-optimizer/) | Automatically preflights existing Agent Skills before GitHub or marketplace publication: audits routing and trust, prepares bilingual release surfaces, and verifies remote installation and discovery. |
+| [skill-discovery-optimizer](skill-discovery-optimizer/) | Through pre-publish checks, optimization, and verification, it makes Skills easier for Agents to discover, invoke correctly, and install successfully. |
 | [xianyu-publish](xianyu-publish/) | A local-first workflow for personal Xianyu sellers: inspect photos, research comparables, protect pricing, write honest copy, publish after confirmation, verify, and track lightly. |
 
 ## Repository structure
