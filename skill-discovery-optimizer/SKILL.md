@@ -10,8 +10,9 @@ description: >-
   "把这个 Skill 发布到其他技能市场", "publish these Agent Skills and verify
   installation", "audit my skill before publishing", "减少这个 Skill 的误触发",
   or "优化 Skill description 和 GitHub metadata". Review semantic routing,
-  trust, installability, bilingual release materials, remote installation, and
-  listing. Do not use to build core functionality, install someone else's
+  trust, installability, applicable user/repository publishing policies,
+  bilingual release materials, remote installation, and listing. Do not use
+  to build core functionality, install someone else's
   skill, publish an ordinary non-skill repository, do generic bilingual README
   work or web GEO/SEO, run long-term growth analytics, or publish an MCP server.
 ---
@@ -51,10 +52,13 @@ This is semantic implicit invocation, not an operating-system or Git hook. It wo
 ### 2. Inspect the target
 
 - Require a local folder containing a working `SKILL.md` draft.
+- Read applicable global and workspace instructions plus explicit user release constraints before choosing a destination or staging files.
+- Turn those constraints into a release contract: canonical repository, visibility, skill path, included runtime files, excluded development files, and the disposition of any superseded repository.
 - Read the full skill, its scripts/references/assets, repository documentation, and Git state.
 - Preserve the skill's core behavior unless the user separately asks to change it.
 - Identify target users, the concrete job, neighboring skills, and language coverage.
 - Detect whether the skill already lives in a monorepo. Preserve that repository structure by default.
+- Keep local validation assets available for preflight even when the release contract excludes tests, fixtures, snapshots, or test-only workflows from GitHub.
 
 ### 3. Optimize semantic discovery
 
@@ -98,15 +102,18 @@ Publishing is an external write. Immediately before it:
 
 1. Run `gh auth status` and `gh api user --jq .login`.
 2. Inspect the target's Git root and `origin`; verify write access.
-3. If the skill already belongs to a repository, reuse that exact repository by default. Never create a second repository just because the skill was renamed.
-4. If no repository exists, propose an exact `owner/repository` and visibility; create it only after explicit confirmation.
-5. Show the authenticated account, exact repository, visibility, changed paths, and whether the operation will replace or add a skill directory.
+3. If an applicable user or workspace policy names a canonical Skill monorepo, use that repository and preserve its existing layout. Do not create or continue a standalone Skill repository unless the user explicitly overrides the policy for the current task.
+4. Otherwise, if the skill already belongs to a repository, reuse that exact repository by default. Never create a second repository just because the skill was renamed.
+5. If no repository exists, propose an exact `owner/repository` and visibility; create it only after explicit confirmation.
+6. Show the authenticated account, exact repository, visibility, changed paths, release exclusions, and whether the operation will replace or add a skill directory.
 
 Never infer repository ownership from Git author name or email. Continue only after the user confirms the exact destination.
 
 ### 8. Publish and verify
 
-Commit only intended files, push to the confirmed repository, and set the approved bilingual description/topics. Then run:
+Build an explicit release file set before staging. Respect policy-defined exclusions: development tests may still run locally but must not be committed when the release contract excludes them. Inspect `git diff --cached --name-only` and stop if any excluded path is staged.
+
+Commit only intended files, push to the confirmed repository, and set the approved bilingual description/topics. When migrating a Skill, verify the canonical destination before archiving or otherwise retiring the superseded repository. Then run:
 
 ```bash
 python3 /path/to/skill-discovery-optimizer/scripts/verify_publish.py owner/repository --skill skill-name
