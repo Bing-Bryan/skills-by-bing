@@ -39,7 +39,7 @@ Help ordinary users sell personal items with little effort. Let the model handle
 7. After showing the final plan, if the user's requested outcome includes a live publish, edit, price change, unpublish, or delete action, proactively ask one explicit authorization question that names the action and key values. Do not wait for the user to volunteer another command. Treat the initial request as intent, not final approval; a price decrease always needs separate confirmation.
 8. Publish with OpenCLI when supported; otherwise use the isolated browser. Preserve one canonical copy for both confirmation and publication.
 9. Verify the live URL, price, images, category, condition, shipping, and copy line by line. Repair rendering before reporting completion.
-10. After successful live verification, proactively offer lightweight monitoring once and briefly explain the daily metric digest and silent status checks. Only if the user accepts—or has already requested monitoring—initialize local state and create the schedules in [references/monitoring-and-state.md](references/monitoring-and-state.md).
+10. After successful live verification, proactively offer lightweight monitoring once and briefly explain the daily metric digest and silent status checks. Only if the user accepts—or has already requested monitoring—initialize local state and create or update the single combined monitoring session in [references/monitoring-and-state.md](references/monitoring-and-state.md). Never create separate digest and status-check sessions.
 
 ## Adaptive research gate
 
@@ -63,7 +63,7 @@ Before drafting new copy or making a substantive change to title, positioning, p
 - Optimize photos only by selection, order, crop, straightening, and mild exposure/white-balance correction. Never hide wear or synthesize product facts.
 - Do not read buyer chat content by default. A user-reported inquiry—or optional metadata-only detection—starts a 48-hour negotiation hold; if the item remains active afterward, resume operation.
 - After publication, monitor only user-owned listings by default; do not keep polling research comparables.
-- Keep multiple items independent but combine normal daily reporting into one scheduled job.
+- Use one combined monitoring session per state directory. Run status checks and daily digests in that session, include all active items, and update it in place instead of creating duplicates.
 
 ## Safety and recovery
 

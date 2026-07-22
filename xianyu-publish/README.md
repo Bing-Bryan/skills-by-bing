@@ -21,7 +21,7 @@ Works with Claude Code, Codex, Cursor, and any agent supported by [`npx skills`]
 3. **Protected-price plan** — one recommendation: asking price, expected transaction range, a seller-only private floor shown for confirmation, and a trial window. Never lowers the price automatically.
 4. **Honest copy** — mobile-readable listing following the 人—货—况—证—价—交 structure; owner's voice, no merchant clichés, every flaw tied to a photo.
 5. **Publish on your confirmation & verify** — publishes via OpenCLI or an isolated browser once you approve, then verifies the live page line by line (Xianyu is known to collapse line breaks).
-6. **Optional own-listing tracking** — after publication, tracks only your listing by default: daily view/want deltas, diagnosis before any price-cut suggestion, and single-variable experiments observed for at least 72 hours.
+6. **Optional own-listing tracking** — after publication, tracks only your listings by default: status checks and the daily digest share one monitoring session, polling every six hours and emitting at most one combined digest per day.
 
 ## Safety model
 

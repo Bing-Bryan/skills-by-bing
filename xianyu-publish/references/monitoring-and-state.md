@@ -15,23 +15,29 @@ Monitor user-owned listings only. Do not continue polling the pre-publish compar
 
 Do not monitor private chat content, platform impressions, CTR, recommendation sources, or global search rank. Search-position and experiment details are opt-in diagnostics, not daily-report defaults.
 
-## Schedule
+## Unified monitoring session
 
-When the user requests monitoring, create two lightweight local schedules with whatever scheduler the host agent provides (scheduled tasks, cron, or equivalent):
+When the user requests monitoring, create exactly one recurring automation/task/session per state directory. Do not create separate daily-digest and status-check tasks, and do not create one task per item.
 
-1. Daily digest: poll all active items once per day and send one combined report.
-2. Status check: every six hours, inspect status only; remain silent unless the item becomes sold, paused, deleted, or unreadable.
+Use one six-hour schedule. On every run:
 
-Use OpenCLI structured reads. Use browser DOM only for a missing field or failed adapter. Stop on verification or risk control; do not repeatedly retry.
+1. Poll the status of all monitorable user-owned items.
+2. Report immediately only when an item becomes sold, paused, deleted, or unreadable.
+3. On the first run at or after the user's preferred daily-report time, also produce one combined daily digest and run `purge`.
+4. Persist `last_digest_date` in private local monitor metadata under the state directory so later runs that day remain silent.
+
+Give the task a stable identity derived from the absolute state-directory path, for example `xianyu-monitor:<state-dir>`. Before creating it, inspect existing automations and update the matching task in place. Never create a duplicate because the visible task name differs. For legacy duplicates, keep one combined task and remove the others only with the user's authorization.
+
+Use OpenCLI structured reads. Use browser DOM only for a missing field or failed adapter. Stop on verification or risk control; do not repeatedly retry. Disable the combined task only when no item in its state directory remains monitorable.
 
 ## State machine
 
 - `active`: normal trial or observation.
 - `experiment`: one authorized title, keyword, or main-image test.
 - `negotiation_hold`: 48 hours after a user-reported inquiry or opt-in metadata-only conversation event; monitor status but do not change the listing.
-- `paused`: item is unpublished; stop normal reporting but retain local data.
-- `deleted`: item was deleted; stop schedules and retain local state for the user to review or remove. Do not relabel it as paused or sold.
-- `sold`: stop schedules, delete the private floor immediately, retain non-sensitive metrics for 30 days, then purge.
+- `paused`: item is unpublished; exclude it from normal reporting but retain local data.
+- `deleted`: item was deleted; exclude it from monitoring and retain local state for the user to review or remove. Do not relabel it as paused or sold.
+- `sold`: exclude it from monitoring, delete the private floor immediately, retain non-sensitive metrics for 30 days, then purge.
 
 Do not treat `paused/unpublished` as sold. Ask when the platform status is ambiguous. If a hold expires and the item remains active, return to `active`.
 
