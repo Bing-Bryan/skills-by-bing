@@ -1,6 +1,6 @@
 interface:
   display_name: "Skill Discovery Optimizer"
   short_description: "Audit Agent Skills before publishing and improve discovery"
-  default_prompt: "Use $skill-discovery-optimizer to enforce applicable publishing policies, audit and prepare every changed Agent Skill, publish only the approved file set to the confirmed repository, then verify remote installation and discovery."
+  default_prompt: "Use $skill-discovery-optimizer to audit and prepare every changed Agent Skill before publishing, publish only the approved file set to the confirmed repository, then verify remote installation and discovery."
 policy:
   allow_implicit_invocation: true
