@@ -1,0 +1,4 @@
+interface:
+  display_name: "并行图片生成"
+  short_description: "使用独立 Codex 进程并发执行多个图片生成或编辑任务"
+  default_prompt: "使用 $parallel-imagegen，通过独立 Codex Worker 并发完成这些互不依赖的图片输出。"

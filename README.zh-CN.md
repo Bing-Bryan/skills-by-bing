@@ -24,6 +24,7 @@ npx skills add Bing-Bryan/skills-by-bing --skill skill-discovery-optimizer
 
 | Skill | 作用 |
 | --- | --- |
+| [parallel-imagegen](parallel-imagegen/) | 通过彼此独立的 `codex exec` 进程，并发执行内置 Codex 图片生成或编辑任务，并提供有界 Worker、失败隔离重试和证据验证。 |
 | [skill-discovery-optimizer](skill-discovery-optimizer/) | 通过发布前的检查、优化与验证，让 Skill 更容易被 Agent 发现、准确触发并顺利安装。 |
 | [xianyu-publish](xianyu-publish/) | 面向闲鱼个人卖家的本地优先工作流：看图查价、保价定价、诚实文案，经确认后发布、核对并轻量跟踪。 |
 
