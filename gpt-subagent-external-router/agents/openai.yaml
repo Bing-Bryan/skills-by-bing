@@ -1,6 +1,0 @@
-interface:
-  display_name: "GPT Subagent External Router (Deprecated)"
-  short_description: "One-release alias for Codex External Subagent Bridge"
-  default_prompt: "Use only for an existing Codex Desktop pinned entry that still references the old Skill name. Preserve exact 新建 behavior and forward to the installed codex-external-subagent-bridge. Never configure or modify providers."
-policy:
-  allow_implicit_invocation: false

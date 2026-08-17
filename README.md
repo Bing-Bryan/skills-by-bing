@@ -35,9 +35,6 @@ Works with agents supported by [`npx skills`](https://skills.sh), including Clau
 | [codex-external-subagent-bridge](codex-external-subagent-bridge/) | Codex Desktop-only launcher and route-contract bridge. A project-pinned exact `新建` entry creates a zero-bootstrap-turn V1 task as GPT-5.6 Luna, switches it to GPT-5.6 Sol Ultra, and exposes only enabled, locally smoke-tested, fingerprint-matching existing child or MCP routes. Users define their own providers; the Skill does not modify provider, MCP, Keychain, CC Switch, or global model configuration. |
 | [xianyu-publish](xianyu-publish/) | A local-first workflow for personal Xianyu sellers: inspect photos, research comparables, protect pricing, write honest copy, publish after confirmation, verify, and track lightly. |
 
-`gpt-subagent-external-router` remains as a deprecated compatibility shim for
-one release. New installations should use `codex-external-subagent-bridge`.
-
 ## Repository structure
 
 ```text
