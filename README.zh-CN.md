@@ -35,9 +35,6 @@ npx skills add Bing-Bryan/skills-by-bing --skill codex-external-subagent-bridge
 | [codex-external-subagent-bridge](codex-external-subagent-bridge/) | 仅面向 Codex Desktop 的启动器与路由契约 Bridge。项目置顶入口只接受精确“新建”，以 GPT-5.6 Luna 创建零 bootstrap turn 的 V1 任务，再无 turn 切换到 GPT-5.6 Sol Ultra；仅暴露已启用、本机冒烟通过且配置指纹一致的现有 child/MCP 路线。Provider 由用户自行定义，Skill 不修改 Provider、MCP、Keychain、CC Switch 或全局模型配置。 |
 | [xianyu-publish](xianyu-publish/) | 面向闲鱼个人卖家的本地优先工作流：看图查价、保价定价、诚实文案，经确认后发布、核对并轻量跟踪。 |
 
-`gpt-subagent-external-router` 仅保留一个版本的兼容 shim；新安装请使用
-`codex-external-subagent-bridge`。
-
 ## 仓库结构
 
 ```text
