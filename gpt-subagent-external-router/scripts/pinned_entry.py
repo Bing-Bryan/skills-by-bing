@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Forward the legacy launcher path to the canonical Bridge."""
+"""Forward the legacy deterministic entry path to the canonical Bridge."""
 
 from __future__ import annotations
 
@@ -13,9 +13,9 @@ def candidates() -> tuple[Path, ...]:
     home = Path(raw_home).expanduser().resolve() if raw_home else (Path.home() / ".codex").resolve()
     here = Path(__file__).resolve()
     return (
-        here.parents[2] / "codex-external-subagent-bridge" / "scripts" / "launch_bridge.py",
-        home / "skills" / "codex-external-subagent-bridge" / "scripts" / "launch_bridge.py",
-        Path.home() / ".agents" / "skills" / "codex-external-subagent-bridge" / "scripts" / "launch_bridge.py",
+        here.parents[2] / "codex-external-subagent-bridge" / "scripts" / "pinned_entry.py",
+        home / "skills" / "codex-external-subagent-bridge" / "scripts" / "pinned_entry.py",
+        Path.home() / ".agents" / "skills" / "codex-external-subagent-bridge" / "scripts" / "pinned_entry.py",
     )
 
 
