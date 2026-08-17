@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Create one persistent Codex Desktop task: Luna/V1 handshake -> Sol Ultra.
+"""Internal launcher for a pinned entry: Luna/V1 handshake -> Sol Ultra.
 
 The launcher verifies the approved project allowlist and canonical cwd. Desktop
 task binding still requires a follow-up lookup by the host application.
+Users should not invoke this helper directly.
 """
 
 from __future__ import annotations

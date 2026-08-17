@@ -5,16 +5,41 @@ description: >-
   defining external models as subagents. In this context, explicitly lock an
   allowlisted Codex Desktop task to V1, use GPT-5.6 Sol as the root agent to
   decompose, run in parallel, wait, and synthesize work, and route the external
-  subtask through a configured, smoke-tested route. This Skill does not itself
-  invoke provider APIs or implement child-agent dispatch; Sol and the selected
-  MCP/adapter route perform delivery. The author's tested routes currently
-  cover DeepSeek, Kimi through CC Switch, and a Grok CLI tool; other providers
-  remain untested. Use for external-provider child-agent routing and safety
-  audits; do not use for ordinary tasks, credential setup, or unsupported
-  provider claims.
+  subtask through a configured, smoke-tested route. Install and configure this
+  Skill once, then use one project-bound pinned Codex entry per approved
+  project: the user types only the exact `新建` command in that entry. This
+  Skill is the entry's implementation, not a command the user should invoke
+  directly. It does not itself invoke provider APIs or implement child-agent
+  dispatch; Sol and the selected MCP/adapter route perform delivery. The
+  author's tested routes currently cover DeepSeek, Kimi through CC Switch, and
+  a Grok CLI tool; other providers remain untested. Use only behind a
+  configured pinned entry or for its safety audit; do not use for ordinary
+  tasks, credential setup, or unsupported provider claims.
 ---
 
 # GPT Subagent External Router
+
+## One-time setup and pinned entries
+
+Configure the Skill and approved registries once. Then create one ordinary,
+project-bound Codex task for each approved project and pin it in the Desktop
+sidebar. Each pinned task is a stable launcher entry; it must not do real work.
+The user-facing protocol is fixed:
+
+- On startup, reply exactly `入口已就绪`.
+- Accept only a trimmed, exact `新建` message.
+- On any other input, reply exactly `只接受「新建」`.
+- On `新建`, invoke the internal launcher with that entry's fixed
+  `projectId` and canonical `cwd`; never ask the user to run the script or
+  provide these values.
+- Allow only one launch at a time. A second concurrent request returns
+  `already_running`.
+- After success, the entry synchronizes, titles, verifies, and navigates to the
+  new task. Do not expose the internal ID unless a post-creation error needs
+  recovery.
+
+Do not ask the user to type `$gpt-subagent-external-router`, use a terminal, or
+repeat setup for each launch.
 
 ## Configure approved scope
 
@@ -36,7 +61,7 @@ Never store prompts, project content, API keys, OAuth material, environment
 values, or raw event streams in either registry. A pinned entry accepts only
 its configured launch phrase and must not process the user's real task.
 
-## Create one task
+## Internal launch called by a pinned entry
 
 1. Obtain the active Desktop `projectId` and `cwd` from app-owned context. Do
    not infer either value from project files.
@@ -46,7 +71,7 @@ its configured launch phrase and must not process the user's real task.
    If any condition is missing or overridden, stop with
    `global_defaults_required`/`global_v1_required`; never repair it by editing
    global configuration.
-3. Run exactly one launcher process:
+3. The pinned entry runs exactly one launcher process internally:
 
    ```bash
    python3 scripts/launch_v1_sol.py --project-id "PROJECT_ID" --cwd "PROJECT_CWD"
@@ -68,8 +93,8 @@ to Luna.
 
 ## Synchronize with Desktop
 
-After a successful launcher result, use the available Desktop task controls in
-this order:
+After a successful internal launch, the pinned entry uses the available Desktop
+task controls in this order:
 
 1. Send one fixed, tool-free sync turn to `threadId` with model
    `gpt-5.6-sol` and reasoning `ultra`:

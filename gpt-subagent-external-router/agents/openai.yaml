@@ -1,6 +1,6 @@
 interface:
   display_name: "GPT Subagent External Router"
-  short_description: "Bridge Sol Ultra to verified external routes through V1"
-  default_prompt: "Use $gpt-subagent-external-router to create and open an allowlisted V1 Sol Ultra task, verify its project binding in Desktop, then let Sol route only through author-deployed or locally smoke-tested external transports; label documentation-only candidates as unverified."
+  short_description: "Power project-pinned 新建 entries for V1 Sol external routing"
+  default_prompt: "Configure this Skill once, then use it only behind a project-bound pinned Codex entry: reply 入口已就绪 on startup, accept only exact 新建, launch one allowlisted V1 Sol Ultra task, verify its Desktop project binding, and let Sol route only through author-deployed or locally smoke-tested external transports. Do not expose the launcher as a user command."
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true
