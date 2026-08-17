@@ -7,7 +7,7 @@ description: >-
   decompose, run in parallel, wait, and synthesize work, and route the external
   subtask through a configured, smoke-tested route. Install and configure this
   Skill once, then use one project-bound pinned Codex entry per approved
-  project: the user types only the exact `新建` command in that entry. This
+  project: the user types only the exact `new` command in that entry. This
   Skill is the entry's implementation, not a command the user should invoke
   directly. It does not itself invoke provider APIs or implement child-agent
   dispatch; Sol and the selected MCP/adapter route perform delivery. The
@@ -26,10 +26,10 @@ project-bound Codex task for each approved project and pin it in the Desktop
 sidebar. Each pinned task is a stable launcher entry; it must not do real work.
 The user-facing protocol is fixed:
 
-- On startup, reply exactly `入口已就绪`.
-- Accept only a trimmed, exact `新建` message.
-- On any other input, reply exactly `只接受「新建」`.
-- On `新建`, invoke the internal launcher with that entry's fixed
+- On startup, reply exactly `ENTRY_READY`.
+- Accept only a trimmed, exact `new` message.
+- On any other input, reply exactly `ONLY_ACCEPTS_NEW`.
+- On `new`, invoke the internal launcher with that entry's fixed
   `projectId` and canonical `cwd`; never ask the user to run the script or
   provide these values.
 - Allow only one launch at a time. A second concurrent request returns
