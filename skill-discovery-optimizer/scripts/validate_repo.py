@@ -18,7 +18,6 @@ from typing import Any
 
 
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-CJK_RE = re.compile(r"[\u3400-\u9fff]")
 ENGLISH_RE = re.compile(r"[A-Za-z]{3,}")
 
 
@@ -130,8 +129,8 @@ def validate(skill_dir: Path, repo: str | None, mode: str) -> list[Finding]:
 
     if not isinstance(description, str) or len(description.strip()) < 80:
         add(findings, "error", "description-short", "Description is missing or too short to route reliably.", "Description 缺失或过短，无法可靠路由。")
-    elif not (CJK_RE.search(description) and ENGLISH_RE.search(description)):
-        add(findings, "error", "description-bilingual", "Description must contain natural English and Chinese trigger language.", "Description 必须包含自然的中英文触发表达。")
+    elif not ENGLISH_RE.search(description):
+        add(findings, "error", "description-language", "Description must contain clear English trigger language; Chinese may be added optionally.", "Description 必须包含清晰的英文触发表达；中文可按需要补充。")
 
     root, in_git_repo = repository_root(skill_dir)
     readme_en = root / "README.md"
